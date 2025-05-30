@@ -61,11 +61,14 @@ function isInGrammar(utterance: string) {
   return utterance.toLowerCase() in grammar;
 }
 
+
+// # PREVIOUS CODE BEFORE FIXING IT
+
 //function getPerson(utterance: string | undefined) {
 //  return utterance ?(grammar[utterance.toLowerCase()] || {}).person : undefined; 
 //}
-// when I try the model and say the names that are in the grammar, it does not identify the name
-// since it always says "UNDEFINED"
+// #when I try the model and say the names that are in the grammar, it does not identify the name
+// #since it always says "UNDEFINED"
 
 function getPerson(utterance: string) {
   return (grammar[utterance.toLowerCase()] || {}).person; 

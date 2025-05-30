@@ -1,0 +1,603 @@
+NextQuestionRandom: {
+    initial: "Start",
+    states: {
+        Start: {
+            always: [
+                {
+                    target: "Prompt",
+                    guard: ({context}) => context.counter < maxCounter
+                },
+                {
+                    target: "#MakeGuess"
+                }
+            ]
+        },
+        Prompt: {
+            entry: [
+                assign(({context}) => { return context.counter: context.counter + 1}),
+                {
+                    type: "spst.speak", params ({context}) => {utterance: getQuestion(context.category, context.askedQuestions) thingy}
+                }
+            ]
+        }
+    }
+},
+MakeGuess: {
+    id: "MakeGuess"
+    ...
+}
+
+
+
+getQuestion(category, asked){
+    if (...) return "no question"
+    questions = []
+    if questions length 0: return "no questions"
+    index = Math.floor(Math.random * questions.length)
+    if index in asked  : get new index          --> google how to while loop in typescript 
+    if not: return question[index]
+}
+
+
+
+
+
+//
+const CATEGORIES = ['profession', 'nationality', 'gender', 'age'] as const;
+type Category = typeof CATEGORIES[number];
+
+const PEOPLE = [
+  { name: 'Albert Einstein', profession: 'Scientist', nationality: 'German', gender: 'Male', age: 76 },
+  { name: 'Marie Curie', profession: 'Scientist', nationality: 'Polish', gender: 'Female', age: 66 },
+  // Add more people here
+];
+
+type Question = {
+  category: Category;
+  text: string;
+  predicate: (person: typeof PEOPLE[number]) => boolean;
+};
+
+const QUESTIONS: Question[] = [
+  {
+    category: 'profession',
+    text: 'Is the person a scientist?',
+    predicate: (person) => person.profession === 'Scientist',
+  },
+  // Add more questions here
+];
+
+const askedQuestions: { true: string[]; false: string[] } = {
+  true: [],
+  false: [],
+};
+
+let questionCounter = 0;
+
+const getQuestionForCategory = (category: Category): Question | null => {
+  while (questionCounter < 5) {
+    const availableQuestions = QUESTIONS.filter(
+      (q) => q.category === category && !askedQuestions.true.includes(q.text) && !askedQuestions.false.includes(q.text)
+    );
+    if (availableQuestions.length === 0) return null;
+    const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+    questionCounter++;
+    return availableQuestions[randomIndex];
+  }
+  return null;
+};
+
+const askQuestion = (question: Question): boolean => {
+  // Simulate user input (replace with actual user input logic)
+  const userAnswer = Math.random() < 0.5;
+  if (userAnswer) {
+    askedQuestions.true.push(question.text);
+  } else {
+    askedQuestions.false.push(question.text);
+  }
+  return userAnswer;
+};
+
+const guessPerson = () => {
+  const remainingPeople = PEOPLE.filter((person) => {
+    return QUESTIONS.every((question) => {
+      if (askedQuestions.true.includes(question.text)) {
+        return question.predicate(person);
+      }
+      if (askedQuestions.false.includes(question.text)) {
+        return !question.predicate(person);
+      }
+      return true;
+    });
+  });
+
+  if (remainingPeople.length === 1) {
+    console.log(`I guess the person is ${remainingPeople[0].name}!`);
+  } else {
+    console.log("I couldn't guess the person. Let's try again!");
+  }
+};
+
+const playGame = () => {
+  while (questionCounter < 5) {
+    for (const category of CATEGORIES) {
+      const question = getQuestionForCategory(category);
+      if (question) {
+        const answer = askQuestion(question);
+        console.log(`Question: ${question.text}`);
+        console.log(`Answer: ${answer}`);
+      }
+    }
+  }
+  guessPerson();
+};
+
+playGame();
+
+
+---
+
+{
+            guard: ({ context }) => {
+              return !!(context.lastResult && context.lastResult[0] && context.lastResult[0].utterance.toLowerCase() === "singer");
+            },
+           //guard: ({context})=> isCategory(context.lastResult![0].utterance), ///people[PERSON["singer"]],
+            actions: assign(({context})=> ({ category: context.lastResult![0].utterance })),
+            target: "GrammyAwards",
+          },
+GrammyAwards : {
+        entry: {
+          type: "spst.speak",
+          params: {utterance: "Has he ever won Grammys?"} },
+        on: { SPEAK_COMPLETE: "NextQuestionNationality"},
+
+      },
+
+      ---
+
+      ProcessNextQuestionCategory: {
+  always: [
+    {
+      guard: ({ context }) => context.lastResult && context.lastResult[0] && context.lastResult[0].utterance.toLowerCase() === "singer",
+      actions: assign(({ context }) => ({ category: context.lastResult![0].utterance })),
+      target: "GrammyAwards",
+    },
+    {
+      guard: ({ context }) => context.lastResult && context.lastResult[0] && context.lastResult[0].utterance.toLowerCase() === "actor",
+      actions: assign(({ context }) => ({ category: context.lastResult![0].utterance })),
+      target: "OscarAwards",
+    },
+    // Add more category checks as needed
+    { target: "NextQuestionNationality" }, // Default transition if no category matches
+  ],
+},
+
+GrammyAwards: {
+  entry: {
+    type: "spst.speak",
+    params: { utterance: "Has this person ever won a Grammy?" }
+  },
+  on: { SPEAK_COMPLETE: "ListenGrammyAwards" },
+},
+ListenGrammyAwards: {
+  entry: { type: "spst.listen" },
+  on: {
+    RECOGNISED: {
+      actions: assign(({ event }) => ({ lastResult: event.value })),
+      target: "ProcessGrammyAwards",
+    },
+    ASR_NOINPUT: {
+      actions: assign({ lastResult: null }),
+      target: "GrammyAwards",
+    },
+  },
+},
+ProcessGrammyAwards: {
+  always: [
+    {
+      guard: ({ context }) => isAffirmative(context.lastResult![0].utterance),
+      actions: assign({ GrammyAwards: true }),
+      target: "NextQuestionNationality",
+    },
+    {
+      guard: ({ context }) => isNegative(context.lastResult![0].utterance),
+      actions: assign({ GrammyAwards: false }),
+      target: "NextQuestionNationality",
+    },
+    { target: "GrammyAwards" },
+  ],
+},
+
+OscarAwards: {
+  entry: {
+    type: "spst.speak",
+    params: { utterance: "Has this person ever won an Oscar?" }
+  },
+  on: { SPEAK_COMPLETE: "ListenOscarAwards" },
+},
+ListenOscarAwards: {
+  entry: { type: "spst.listen" },
+  on: {
+    RECOGNISED: {
+      actions: assign(({ event }) => ({ lastResult: event.value })),
+      target: "ProcessOscarAwards",
+    },
+    ASR_NOINPUT: {
+      actions: assign({ lastResult: null }),
+      target: "OscarAwards",
+    },
+  },
+},
+ProcessOscarAwards: {
+  always: [
+    {
+      guard: ({ context }) => isAffirmative(context.lastResult![0].utterance),
+      actions: assign({ OscarAwards: true }),
+      target: "NextQuestionNationality",
+    },
+    {
+      guard: ({ context }) => isNegative(context.lastResult![0].utterance),
+      actions: assign({ OscarAwards: false }),
+      target: "NextQuestionNationality",
+    },
+    { target: "OscarAwards" },
+  ],
+},
+
+/// DRAFTING A CODE IDK 
+      NobelPrize: {
+        initial: "Prompt",
+        on: {
+          LISTEN_COMPLETE: [
+            {
+              target: "ProcessNobelPrize",
+              guard: ({context}) => !!context.lastResult,
+            },
+            {target: ".NoInput"},
+          ],
+        },
+        states: {
+          Prompt: {
+            entry: {type: "spst.speak", params:{utterance: "Has he ever won Grammys?"}},
+            on: {SPEAK_COMPLETE: "Listen"},  
+          },
+          NoInput: {
+            entry: {type: "spst.speak", params: {utterance: "Can you repeat?"}},
+            on: {SPEAK_COMPLETE: "Listen"},
+          },
+          Listen: {
+            entry: {type: "spst.listen"},
+            on: {
+              RECOGNISED: {
+                actions: assign(({event})=>({lastResult: event.value})),
+              },
+              ASR_NOINPUT: {
+                actions: assign({lastResult: null}),
+              },
+            },
+          },
+        },
+      },
+      ProcessNobelPrize: {
+        always: [
+            {
+              guard: ({ context }) => isAffirmative(context.lastResult![0].utterance),
+              actions: assign({alive: true}),
+              target: "TryMakeGuess", //modify
+            },
+            {
+              guard: ({ context }) => isNegative(context.lastResult![0].utterance),
+              actions: assign({alive: false}),
+              target: "TryMakeGuess", // modify
+            },
+          { target: "NobelPrize.Prompt"},
+        ],
+      },
+      //
+      TryMakeGuess: {
+        initial: "Prompt",
+        on: {
+          LISTEN_COMPLETE: [
+            {
+              target: "ProcessTryMakeGuess",
+              guard: ({context}) => !!context.lastResult,
+            },
+            {target: ".NoInput"},
+          ],
+        },
+        states: {
+          Prompt: {
+            entry: {type: "spst.speak", params:{utterance: `Is your person ${context.name}`}},
+            on: {SPEAK_COMPLETE: "Listen"},  
+          },
+          NoInput: {
+            entry: {type: "spst.speak", params: {utterance: "Can you repeat?"}},
+            on: {SPEAK_COMPLETE: "Listen"},
+          },
+          Listen: {
+            entry: {type: "spst.listen"},
+            on: {
+              RECOGNISED: {
+                actions: assign(({event})=>({lastResult: event.value})),
+              },
+              ASR_NOINPUT: {
+                actions: assign({lastResult: null}),
+              },
+            },
+          },
+        },
+      },
+      ProcessTryMakeGuess: {
+        always: [
+            {
+              guard: ({context}) => answeredQuestions(context.lastResult![0].utterance),
+              actions: assign
+            }
+            {
+              guard: ({ context }) => isAffirmative(context.lastResult![0].utterance),
+              actions: assign({alive: true}),
+              target: "EndOfGame",
+            },
+            {
+              guard: ({ context }) => isNegative(context.lastResult![0].utterance),
+              actions: assign({alive: false}),
+              target: "GameOver", 
+            },
+          { target: "TryMakeGuess.Prompt"},
+        ],
+      },
+
+///
+
+ProcessTryMakeGuess: {
+  always: [
+    // Check if the last answer exists and update answeredQuestions
+    {
+      guard: ({ context }) => context.lastResult && context.lastResult[0]?.utterance,
+      actions: assign(({ context }) => {
+        const answer = context.lastResult[0].utterance.toLowerCase();
+
+        if (isAffirmative(answer)) {
+          answeredQuestions.true.push(context.currentQuestion);
+        } else if (isNegative(answer)) {
+          answeredQuestions.false.push(context.currentQuestion);
+        } else if (!isNaN(Number(answer))) {
+          answeredQuestions.age.push(answer); // If it's a number, assume age
+        } else {
+          answeredQuestions.category.push(answer); // Default catch-all
+        }
+
+        return {};
+      }),
+    },
+    // Make a refined guess based on answeredQuestions
+    {
+      guard: ({ context }) => {
+        // Logic to make a refined guess based on stored answers
+        return answeredQuestions.true.length > 0 || answeredQuestions.category.length > 0;
+      },
+      actions: assign(({ context }) => {
+        let refinedGuess = "someone";
+
+        if (answeredQuestions.category.length > 0) {
+          refinedGuess = answeredQuestions.category[0]; // Use first category answer
+        } else if (answeredQuestions.true.length > 0) {
+          refinedGuess = answeredQuestions.true[0]; // Use first true answer
+        }
+
+        return { currentGuess: refinedGuess };
+      }),
+      target: "TryMakeGuess.Prompt",
+    },
+
+
+{
+                guard: ({ context }) => context.lastResult && context.lastResult[0]?.utterance,
+                actions: assign(({ context }) => {
+                  const answer = context.lastResult[0].utterance.toLowerCase();
+                  if (isAffirmative(answer)) {
+                    answeredQuestions.true.push(context.currentQuestion);
+                  } else if (isNegative(answer)) {
+                    answeredQuestions.false.push(context.currentQuestion);
+                  } else if (!isNaN(Number(answer))) {
+                    answeredQuestions.age.push(answer); // If it's a number, assume age
+                  } else if (isNationality(answer)) {
+                    answeredQuestions.nationality.push(context.currentQuestion); 
+                  }  else if (getEyeColour(answer)) {
+                    answeredQuestions.eyeColour.push(context.currentQuestion);
+                  }  else if (getHairColour(answer)) {
+                    answeredQuestions.hairColour.push(context.currentQuestion);
+                  }   else if (isGender(answer)) {
+                    answeredQuestions.gender.push(context.currentQuestion);
+                  }  else if ((answer)) {
+                    answeredQuestions.nationality.push(context.currentQuestion);
+                  }  else if (isCategory(answer)) {
+                    answeredQuestions.category.push(context.currentQuestion);
+                  } else {
+                    answeredQuestions.category.push(answer); // Default catch-all
+                  }
+                  return {};
+                }),
+            },
+
+// 
+
+const people: PERSON[]=[
+    {name: "Taylor Swift", alive: true, age: 34, gender: "female", category: "singer", nationality: "american", eyeColour: "blue", tall: true, whitePerson: true, hairColour: "blonde", playsInstruments: true, GrammyAwards: true, oscarWinner: false, soloArtist: true, importantFilms: false, hasKids: false, songWriter: true, nobelPrize: false, ballondOr: false},
+    {name: "Harry Styles", alive: true, age: 31, gender: "male", category: "singer", nationality: "british", eyeColour: "green", tall: true, whitePerson: true, hairColour: "brunette", playsInstruments: true, GrammyAwards: true, oscarWinner: false, soloArtist: true, importantFilms: true, hasKids: false, songWriter: true, nobelPrize: false, ballondOr: false},
+    {name: "Cillian Murphy", alive: true, age: 48, gender: "male", category: "actor", nationality: "irish", eyeColour: "blue", tall: false, whitePerson: true, hairColour: "brunette", playsInstruments: true, GrammyAwards: false, oscarWinner: true, soloArtist: false, importantFilms: true, hasKids: true, songWriter: false, nobelPrize: false, ballondOr: false},
+    {name: "Angelina Jolie", alive: true, age: 49, gender: "female", category: "actor", nationality: "american", eyeColour: "blue", tall: true, whitePerson: true, hairColour: "blonde", playsInstruments: false, GrammyAwards: false, oscarWinner: true, soloArtist: false, importantFilms: true, hasKids: true, songWriter: false, nobelPrize: false, ballondOr: false},
+    {name: "Greta Thungberg", alive: true, age: 22, gender: "female", category: "activist", nationality: "swedish", eyeColour: "blue", tall: false, whitePerson: true, hairColour: "blonde", playsInstruments: false, GrammyAwards: false, oscarWinner: false, soloArtist: false, importantFilms: false, hasKids: false, songWriter: false, nobelPrize: false, ballondOr: false},
+    {name: "Michael Jackson", alive: false, age: 50, gender: "male", category: "singer", nationality: "american", eyeColour: "brown", tall: true, whitePerson: false, hairColour: "black", playsInstruments: true, GrammyAwards: true, oscarWinner: false, soloArtist: true, importantFilms: false, hasKids: true, songWriter: true, nobelPrize: false, ballondOr: false},
+    {name: "Whitney Houston", alive: true, age: 48, gender: "female", category: "singer", nationality: "american", eyeColour: "brown", tall: true, whitePerson: false, hairColour: "brunette", playsInstruments: true, GrammyAwards: true, oscarWinner: false, soloArtist: true, importantFilms: false, hasKids: true, songWriter: true, nobelPrize: false, ballondOr: false},
+    {name: "Cristiano Ronaldo", alive: true, age: 40, gender: "male", category: "athlete", nationality: "portuguese", eyeColour: "brown", tall: true, whitePerson: true, hairColour: "brunette", playsInstruments: false, GrammyAwards: false, oscarWinner: false, soloArtist: false, importantFilms: false, hasKids: true, songWriter: false, nobelPrize: false, ballondOr: true},
+    {name: "Justin Bieber", alive: true, age: 31, gender: "male", category: "singer", nationality: "canadian", eyeColour: "brown", tall: true, whitePerson: true, hairColour: "blonde", playsInstruments: true, GrammyAwards: true, oscarWinner: false, soloArtist: true, importantFilms: false, hasKids: true, songWriter: true, nobelPrize: false, ballondOr: false},
+    {name: "Albert Einstein", alive: true, age: 76, gender: "male", category: "scientist", nationality: "german", eyeColour: "brown", tall: false, whitePerson: true, hairColour: "gray", playsInstruments: false, GrammyAwards: false, oscarWinner: false, soloArtist: false, importantFilms: false, hasKids: true, songWriter: false, nobelPrize: true, ballondOr: false},
+]
+
+TryMakeGuess: {
+        initial: "Prompt",
+        on: {
+          LISTEN_COMPLETE: [
+            {
+              target: "ProcessTryMakeGuess",
+              guard: ({context}) => !!context.lastResult,
+            },
+            {target: ".NoInput"},
+          ],
+        },
+        states: {
+          Prompt: {
+            entry: {type: "spst.speak", params: ({context}) => ({utterance:`Is your famous person ${context.name}`})}, // ${contex.}
+            on: {SPEAK_COMPLETE: "Listen"},  
+          },
+          NoInput: {
+            entry: {type: "spst.speak", params: {utterance: "Can you repeat?"}},
+            on: {SPEAK_COMPLETE: "Listen"},
+          },
+          Listen: {
+            entry: {type: "spst.listen"},
+            on: {
+              RECOGNISED: {
+                actions: assign(({event})=>({lastResult: event.value})),
+              },
+              ASR_NOINPUT: {
+                actions: assign({lastResult: null}),
+              },
+            },
+          },
+        },
+      },
+      ProcessTryMakeGuess: {
+        always: [
+            {
+                guard: ({ context }) => isAffirmative(context.lastResult![0].utterance),
+                target: "#EndOfGame",
+              },
+              {
+                guard: ({ context }) => isNegative(context.lastResult![0].utterance),
+                target: "GameOver",
+              },
+            
+
+
+function that takes the index of const people PERSON[]=[{}] within the TryMakeGuess to loop over the people names in order for the machine to make a guess
+if statement for loop
+return person.
+if not, return null;
+
+TryMakeGuess: {
+    initial: "Prompt",
+    on: {
+        LISTEN_COMPLETE: [
+            {
+                target: "ProcessTryMakeGuess",
+                guard: ({context}) => !!context.lastResult,
+            },
+            {target: ".NoInput"},
+        ],
+    },
+    states: {
+        Prompt: {
+            entry: assign(({ context }) => {
+                const guess = makeGuess(context.index);
+                return guess 
+                    ? { name: guess } 
+                    : { name: "I couldn't guess your person." };
+            }),
+            on: { SPEAK_COMPLETE: "Listen" },
+        },
+        NoInput: {
+            entry: {type: "spst.speak", params: {utterance: "Can you repeat?"}},
+            on: {SPEAK_COMPLETE: "Listen"},
+        },
+        Listen: {
+            entry: {type: "spst.listen"},
+            on: {
+                RECOGNISED: {
+                    actions: assign(({event}) => ({ lastResult: event.value })),
+                },
+                ASR_NOINPUT: {
+                    actions: assign({ lastResult: null }),
+                },
+            },
+        },
+    },
+},
+
+ProcessTryMakeGuess: {
+    always: [
+        {
+            guard: ({ context }) => isAffirmative(context.lastResult![0].utterance),
+            target: "#EndOfGame",
+        },
+        {
+            guard: ({ context }) => isNegative(context.lastResult![0].utterance),
+            actions: assign(({ context }) => ({ index: context.index + 1 })), // Move to next person
+            target: "TryMakeGuess",
+        },
+    ],
+},
+///
+
+function makeGuess(answers) {
+    for (let i = 0; i < people.length; i++) {
+        let match = true;
+
+        for (const key in answers) {
+            if (answers[key] !== people[i][key]) {
+                match = false;
+                break;
+            }
+        }
+
+        if (match) {
+            return people[i].name;
+        }
+    }
+    return null;
+}
+
+const TryMakeGuess = {
+    id: "TryMakeGuess",
+    initial: "Prompt",
+    states: {
+        Prompt: {
+            entry: {
+                type: "spst.speak",
+                params: ({ context }) => {
+                    const guessedName = makeGuess(context.answers);
+                    return { utterance: guessedName ? `Is your famous person ${guessedName}?` : "I couldn't determine the person. Can you give me more hints?" };
+                }
+            },
+            on: { SPEAK_COMPLETE: "Listen" },
+        },
+        NoInput: {
+            entry: { type: "spst.speak", params: { utterance: "Can you repeat?" } },
+            on: { SPEAK_COMPLETE: "Listen" },
+        },
+        Listen: {
+            entry: { type: "spst.listen" },
+            on: {
+                RECOGNISED: {
+                    actions: assign(({ event }) => ({ lastResult: event.value }))
+                },
+                ASR_NOINPUT: {
+                    actions: assign({ lastResult: null })
+                },
+            },
+        },
+    },
+    on: {
+        LISTEN_COMPLETE: [
+            {
+                target: "Prompt",
+                guard: ({ context }) => !!context.lastResult,
+                actions: assign(({ context }) => {
+                    return { answers: { ...context.answers, ...context.lastResult } };
+                })
+            },
+            { target: ".NoInput" },
+        ],
+    },
+};

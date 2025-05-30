@@ -1,0 +1,160 @@
+QUESTIONS THAT THE MACHINE CAN ASK
+
+The game always has to start with the same first questions:
+1- Is your famous person alive or deceased?
+2- Is your famous person a woman, a man or non-binary?
+3- Is your famous person an - insert profession-? If answer is No, it will ask another profession until the answer is yes.
+    3.1. Is your famous person part of a band? - In the case that the answer is a musician
+    3.2. Is your famous person a solo artist?
+These questions can be in random order:
+
+4- Is your famous person above n age?
+5- Does your person have x physical characteristic? 
+    5.1. Hair - Brown, blonde, black, ginger, dyed, bald.
+    5.2. Eyes - Brown, blue, green, black, grey
+    5.3. Height - Short, tall
+6- Does your famous person have kids?
+7- Is your famous person from the 21st century?
+    7.1. Is your famous person from the past?
+8- Has your famous person won an award?
+    8.1. Was it an Oscar?
+    8.2. Was it a Grammy?
+    8.3. Was it an Emmy?
+    8.4. Was it a Brit?
+    8.5. Was it a MTV award?
+    8.6. Was it a nobel prize?
+    8.7. Was it an olympic medal?
+9- Has your person been part of a film or tv show?
+10- Does your famous person sing?
+11- Does your famous person play an instrument?
+12- Has your person invented something?
+13- Is
+
+const celebrities = [
+    { name: "Tom Hanks", alive: true, age: 68, gender: "male", category: "actor", nationality: "American", awards: true, attributes: ["Oscar winner", "versatile", "likeable", "white person"]},
+    { name: "Morgan Freeman", alive: true, age: 86, gender: "male", category: "actor", nationality: "American", awards: true, attributes: ["Oscar winner", "distinctive voice", "African American"]},
+    { name: "Samuel L. Jackson", alive: true, age: 75, gender: "male", category: "actor", nationality: "American", awards: true, attributes: ["iconic roles", "African American", "bald"]},
+    { name: "Johnny Depp", alive: true, age: 60, gender: "male", category: "actor", nationality: "American", awards: true, attributes: ["versatile", "eccentric roles", "white person"]},
+    { name: "Will Smith", alive: true, age: 55, gender: "male", category: "actor", nationality: "American", awards: true, attributes: ["Oscar winner", "rapper", "African American"]},
+    { name: "Jim Carrey", alive: true, age: 62, gender: "male", category: "actor", nationality: "Canadian-American", awards: true, attributes: ["comedian", "expressive face", "white person"]},
+    { name: "Denzel Washington", alive: true, age: 69, gender: "male", category: "actor", nationality: "American", awards: true, attributes: ["Oscar winner", "charismatic", "African American"]},
+    { name: "George Clooney", alive: true, age: 62, gender: "male", category: "actor", nationality: "American", awards: true, attributes: ["Oscar winner", "silver fox", "white person"]},
+    { name: "Nicolas Cage", alive: true, age: 60, gender: "male", category: "actor", nationality: "American", awards: true, attributes: ["Oscar winner", "eccentric", "white person"]},
+    { name: "Sandra Bullock", alive: true, age: 59, gender: "female", category: "actor", nationality: "American", awards: true, attributes: ["Oscar winner", "versatile", "white person"]},
+    { name: "Angelina Jolie", alive: true, age: 48, gender: "female", category: "actor", nationality: "American", awards: true, attributes: ["Oscar winner", "humanitarian", "white person"]},
+    { name: "Brad Pitt", alive: true, age: 60, gender: "male", category: "actor", nationality: "American", awards: true, attributes: ["Oscar winner", "producer", "white person"]},
+    { name: "Joaquin Phoenix", alive: true, age: 49, gender: "male", category: "actor", nationality: "American", awards: true, attributes: ["Oscar winner", "method actor", "white person"]},
+    { name: "Margot Robbie", alive: true, age: 33, gender: "female", category: "actor", nationality: "Australian", awards: true, attributes: ["producer", "blonde", "white person"]},
+    { name: "Robert Pattinson", alive: true, age: 37, gender: "male", category: "actor", nationality: "British", awards: true, attributes: ["versatile", "heartthrob", "white person"]},
+    { name: "Ryan Gosling", alive: true, age: 43, gender: "male", category: "actor", nationality: "Canadian", awards: true, attributes: ["versatile", "heartthrob", "white person"]},
+    { name: "Ryan Reynolds", alive: true, age: 47, gender: "male", category: "actor", nationality: "Canadian", awards: true, attributes: ["comedian", "producer", "white person"]},
+    { name: "Julia Roberts", alive: true, age: 56, gender: "female", category: "actor", nationality: "American", awards: true, attributes: ["Oscar winner", "iconic smile", "white person"]},
+    { name: "Emma Roberts", alive: true, age: 32, gender: "female", category: "actor", nationality: "American", awards: true, attributes: ["versatile", "young talent", "white person"]},
+    { name: "Dave Franco", alive: true, age: 38, gender: "male", category: "actor", nationality: "American", awards: true, attributes: ["comedian", "writer", "white person"]},
+    { name: "James Franco", alive: true, age: 45, gender: "male", category: "actor", nationality: "American", awards: true, attributes: ["versatile", "director", "white person"]},
+    { name: "Emma Stone", alive: true, age: 35, gender: "female", category: "actor", nationality: "American", awards: true, attributes: ["Oscar winner", "red hair", "white person"]},
+    { name: "Emilia Clarke", alive: true, age: 37, gender: "female", category: "actor", nationality: "British", awards: true, attributes: ["Game of Thrones star", "brunette", "white person"]},
+    { name: "Meryl Streep", alive: true, age: 74, gender: "female", category: "actor", nationality: "American", awards: true, attributes: ["Oscar winner", "versatile", "white person"]},
+    { name: "Jennifer Aniston", alive: true, age: 54, gender: "female", category: "actor", nationality: "American", awards: true, attributes: ["Friends star", "producer", "white person"]},
+    { name: "Anne Hathaway", alive: true, age: 41, gender: "female", category: "actor", nationality: "American", awards: true, attributes: ["Oscar winner", "versatile", "white person"]},
+    { name: "Scarlett Johansson", alive: true, age: 39, gender: "female", category: "actor", nationality: "American", awards: true, attributes: ["versatile", "Black Widow", "white person"]},
+    { name: "Nicole Kidman", alive: true, age: 56, gender: "female", category: "actor", nationality: "Australian-American", awards: true, attributes: ["Oscar winner", "producer", "white person"]},
+    { name: "Mads Mikkelsen", alive: true, age: 58, gender: "male", category: "actor", nationality: "Danish", awards: true, attributes: ["versatile", "distinctive look", "white person"]},
+    { name: "Bill Skarsgård", alive: true, age: 33, gender: "male", category: "actor", nationality: "Swedish", awards: true, attributes: ["versatile", "It star", "white person"]},
+    { name: "Lionel Messi", alive: true, age: 36, gender: "male", category: "athlete", nationality: "Argentine", awards: true, attributes: ["footballer", "Ballon d'Or winner", "short stature"]},
+    { name: "Cristiano Ronaldo", alive: true, age: 39, gender: "male", category: "athlete", nationality: "Portuguese", awards: true, attributes: ["footballer", "Ballon d'Or winner", "fitness icon"]},
+    { name: "Neymar Jr", alive: true, age: 32, gender: "male", category: "athlete", nationality: "Brazilian", awards: true, attributes: ["footballer", "skillful", "tattoos"]},
+    { name: "Kylian Mbappé", alive: true, age: 25, gender: "male", category: "athlete", nationality: "French", awards: true, attributes: ["footballer", "young talent", "speed"]},
+    { name: "LeBron James", alive: true, age: 39, gender: "male", category: "athlete", nationality: "American", awards: true, attributes: ["basketball player", "NBA champion", "African American"]},
+    { name: "Michael Phelps", alive: true, age: 38, gender: "male", category: "athlete", nationality: "American", awards: true, attributes: ["swimmer", "Olympic champion", "white person"]},
+    { name: "Nadia Comaneci", alive: true, age: 62, gender: "female", category: "athlete", nationality: "Romanian-American", awards: true, attributes: ["gymnast", "perfect 10", "white person"]},
+    { name: "Serena Williams", alive: true, age: 42, gender: "female", category: "athlete", nationality: "American", awards: true, attributes: ["tennis player", "Grand Slam champion", "African American"]},
+    { name: "Fernando Alonso", alive: true, age: 42, gender: "male", category: "athlete", nationality: "Spanish", awards: true, attributes: ["F1 driver", "world champion", "white person"]},
+    { name: "Zlatan Ibrahimović", alive: true, age: 42, gender: "male", category: "athlete", nationality: "Swedish", awards: true, attributes: ["footballer", "charismatic", "tall"]},
+    { name: "Simone Biles", alive: true, age: 26, gender: "female", category: "athlete", nationality: "American", awards: true, attributes: ["gymnast", "Olympic champion", "African American"]},
+    { name: "Rafael Nadal", alive: true, age: 37, gender: "male", category: "athlete", nationality: "Spanish", awards: true, attributes: ["tennis player", "Grand Slam champion", "white person"]},
+    { name: "Jude Bellingham", alive: true, age: 20, gender: "male", category: "athlete", nationality: "English", awards: true, attributes: ["footballer", "young talent", "African British"]},
+    { name: "Maria Sharapova", alive: true, age: 36, gender: "female", category: "athlete", nationality: "Russian", awards: true, attributes: ["tennis player", "Grand Slam champion", "white person"]},
+    { name: "Gerard Piqué", alive: true, age: 37, gender: "male", category: "athlete", nationality: "Spanish", awards: true, attributes: ["footballer", "World Cup winner", "white person"]},
+    { name: "Stephen King", alive: true, age: 76, gender: "male", category: "author", nationality: "American", awards: true, attributes: ["horror writer", "prolific", "white person"]},
+    { name: "George R.R. Martin", alive: true, age: 75, gender: "male", category: "author", nationality: "American", awards: true, attributes: ["fantasy writer", "Game of Thrones creator", "white person"]},
+    { name: "J.K. Rowling", alive: true, age: 58, gender: "female", category: "author", nationality: "British", awards: true, attributes: ["Harry Potter creator", "controversial", "white person"]},
+    { name: "Margaret Atwood", alive: true, age: 84, gender: "female", category: "author", nationality: "Canadian", awards: true, attributes: ["novelist", "poet", "white person"]},
+    { name: "Suzanne Collins", alive: true, age: 61, gender: "female", category: "author", nationality: "American", awards: true, attributes: ["Hunger Games creator", "young adult fiction", "white person"]},
+    { name: "John Green", alive: true, age: 46, gender: "male", category: "author", nationality: "American", awards: true, attributes: ["young adult fiction", "YouTuber", "white person"]},
+    { name: "Greta Thunberg", alive: true, age: 21, gender: "female", category: "activist", nationality: "Swedish", awards: true, attributes: ["climate activist", "young influencer", "white person"]},
+    { name: "Malala Yousafzai", alive: true, age: 26, gender: "female", category: "activist", nationality: "Pakistani", awards: true, attributes: ["education activist", "Nobel laureate", "Asian"]},
+    { name: "Oprah Winfrey", alive: true, age: 70, gender: "female", category: "media personality", nationality: "American", awards: true, attributes: ["talk show host", "philanthropist", "African American"]},
+    { name: "Ellen DeGeneres", alive: true, age: 66, gender: "female", category: "media personality", nationality: "American", awards: true, attributes: ["comedian", "talk show host", "white person"]},
+    { name: "Wendy Williams", alive: true, age: 59, gender: "female", category: "media personality", nationality: "American", awards: true, attributes: ["talk show host", "radio personality", "African American"]},
+    { name: "Jimmy Fallon", alive: true, age: 49, gender: "male", category: "media personality", nationality: "American", awards: true, attributes: ["comedian", "talk show host", "white person"]},
+    { name: "Heidi Klum", alive: true, age: 50, gender: "female", category: "model", nationality: "German-American", awards: true, attributes: ["supermodel", "TV host", "white person"]},
+    { name: "Kylie Jenner", alive: true, age: 26, gender: "female", category: "media personality", nationality: "American", awards: true, attributes: ["entrepreneur", "reality TV star", "white person"]},
+    { name: "Gordon Ramsay", alive: true, age: 57, gender: "male", category: "chef", nationality: "British", awards: true, attributes: ["celebrity chef", "TV personality", "white person"]},
+    { name: "Kim Kardashian", alive: true, age: 43, gender: "female", category: "media personality", nationality: "American", awards: true, attributes: ["reality TV star", "entrepreneur", "Armenian-American"]},
+    { name: "Kendall Jenner", alive: true, age: 28, gender: "female", category: "model", nationality: "American", awards: true, attributes: ["supermodel", "reality TV star", "white person"]},
+    { name: "MrBeast", alive: true, age: 25, gender: "male", category: "YouTuber", nationality: "American", awards: true, attributes: ["philanthropist", "entrepreneur", "white person"]},
+    { name: "Elon Musk", alive: true, age: 52, gender: "male", category: "entrepreneur", nationality: "South African-American", awards: true, attributes: ["Tesla CEO", "SpaceX founder", "white person"]},
+    { name: "PewDiePie", alive: true, age: 34, gender: "male", category: "YouTuber", nationality: "Swedish", awards: true, attributes: ["gamer", "comedian", "white person"]},
+    { name: "Donald Trump", alive: true, age: 77, gender: "male", category: "politician", nationality: "American", awards: true, attributes: ["former US President", "businessman", "white person"]},
+    { name: "Kamala Harris", alive: true, age: 59, gender: "female", category: "politician", nationality: "American", awards: true, attributes: ["US Vice President", "former Senator", "African-Indian American"]},
+    { name: "J.D. Vance", alive: true, age: 39, gender: "male", category: "politician", nationality: "American", awards: true, attributes: ["US Senator", "author", "white person"]},
+    { name: "Pedro Sánchez", alive: true, age: 52, gender: "male", category: "politician", nationality: "Spanish", awards: true, attributes: ["Prime Minister of Spain", "economist", "white person"]},
+    { name: "Mark Zuckerberg", alive: true, age: 39, gender: "male", category: "entrepreneur", nationality: "American", awards: true, attributes: ["Facebook founder", "Meta CEO", "white person"]},
+    { name: "Michael Jackson", alive: false, age: 50, gender: "male", category: "musician", nationality: "American", awards: true, attributes: ["King of Pop", "dancer", "African American"]},
+    { name: "Elvis Presley", alive: false, age: 42, gender: "male", category: "musician", nationality: "American", awards: true,
+    { name: "Whitney Houston", alive: false, age: 48, gender: "female", category: "musician", nationality: "American", awards: true, attributes: ["singer", "actress", "African American"]},
+    { name: "Freddie Mercury", alive: false, age: 45, gender: "male", category: "musician", nationality: "British", awards: true, attributes: ["Queen frontman", "songwriter", "Indian-British"]},
+    { name: "John Lennon", alive: false, age: 40, gender: "male", category: "musician", nationality: "British", awards: true, attributes: ["Beatles member", "songwriter", "white person"]},
+    { name: "Prince", alive: false, age: 57, gender: "male", category: "musician", nationality: "American", awards: true, attributes: ["singer", "multi-instrumentalist", "African American"]},
+    { name: "David Bowie", alive: false, age: 69, gender: "male", category: "musician", nationality: "British", awards: true, attributes: ["singer", "actor", "white person"]},
+    { name: "Avicii", alive: false, age: 28, gender: "male", category: "musician", nationality: "Swedish", awards: true, attributes: ["DJ", "producer", "white person"]},
+    { name: "Aretha Franklin", alive: false, age: 76, gender: "female", category: "musician", nationality: "American", awards: true, attributes: ["Queen of Soul", "singer", "African American"]},
+    { name: "Bob Marley", alive: false, age: 36, gender: "male", category: "musician", nationality: "Jamaican", awards: true, attributes: ["reggae icon", "songwriter", "African Jamaican"]},
+    { name: "Christina Grimmie", alive: false, age: 22, gender: "female", category: "musician", nationality: "American", awards: true, attributes: ["singer", "YouTuber", "white person"]},
+    { name: "Paul Walker", alive: false, age: 40, gender: "male", category: "actor", nationality: "American", awards: true, attributes: ["Fast & Furious star", "humanitarian", "white person"]},
+    { name: "Heath Ledger", alive: false, age: 28, gender: "male", category: "actor", nationality: "Australian", awards: true, attributes: ["Oscar winner", "versatile", "white person"]},
+    { name: "Matthew Perry", alive: false, age: 54, gender: "male", category: "actor", nationality: "American-Canadian", awards: true, attributes: ["Friends star", "comedian", "white person"]},
+    { name: "Chadwick Boseman", alive: false, age: 43, gender: "male", category: "actor", nationality: "American", awards: true, attributes: ["Black Panther star", "versatile", "African American"]},
+    { name: "Robin Williams", alive: false, age: 63, gender: "male", category: "actor", nationality: "American", awards: true, attributes: ["comedian", "Oscar winner", "white person"]},
+    { name: "James Dean", alive: false, age: 24, gender: "male", category: "actor", nationality: "American", awards: true, attributes: ["cultural icon", "rebel", "white person"]},
+    { name: "Betty White", alive: false, age: 99, gender: "female", category: "actor", nationality: "American", awards: true, attributes: ["TV legend", "comedian", "white person"]},
+    { name: "Brittany Murphy", alive: false, age: 32, gender: "female", category: "actor", nationality: "American", awards: true, attributes: ["versatile", "singer", "white person"]},
+    { name: "Maggie Smith", alive: true, age: 90, gender: "female", category: "actor", nationality: "British", awards: true, attributes: ["Dame", "versatile", "white person"]},
+    { name: "Kobe Bryant", alive: false, age: 41, gender: "male", category: "athlete", nationality: "American", awards: true, attributes: ["NBA legend", "Oscar winner", "African American"]},
+    { name: "Diego Maradona", alive: false, age: 60, gender: "male", category: "athlete", nationality: "Argentine", awards: true, attributes: ["football legend", "controversial", "Latin American"]},
+    { name: "Muhammad Ali", alive: false, age: 74, gender: "male", category: "athlete", nationality: "American", awards: true, attributes: ["boxing legend", "activist", "African American"]},
+    { name: "Queen Elizabeth II", alive: false, age: 96, gender: "female", category: "royal", nationality: "British", awards: true, attributes: ["longest-reigning British monarch", "head of Commonwealth", "white person"]},
+    { name: "Nelson Mandela", alive: false, age: 95, gender: "male", category: "politician", nationality: "South African", awards: true, attributes: ["anti-apartheid revolutionary", "President of South Africa", "African"]},
+    { name: "John F. Kennedy", alive: false, age: 46, gender: "male", category: "politician", nationality: "American", awards: true, attributes: ["US President", "assassinated", "white person"]},
+    { name: "Martin Luther King Jr.", alive: false, age: 39, gender: "male", category: "activist", nationality: "American", awards: true, attributes: ["civil rights leader", "Nobel Peace Prize winner", "African American"]},
+    { name: "Mahatma Gandhi", alive: false, age: 78, gender: "male", category: "activist", nationality: "Indian", awards: true, attributes: ["independence movement leader", "non-violent resistance icon", "Indian"]},
+    { name: "Winston Churchill", alive: false, age: 90, gender: "male", category: "politician", nationality: "British", awards: true, attributes: ["Prime Minister", "Nobel laureate", "white person"]},
+    { name: "Henry VIII", alive: false, age: 55, gender: "male", category: "royal", nationality: "English", awards: false, attributes: ["Tudor king", "six wives", "white person"]},
+    { name: "Anne Boleyn", alive: false, age: 35, gender: "female", category: "royal", nationality: "English", awards: false, attributes: ["second wife of Henry VIII", "executed", "white person"]},
+    { name: "Isabella I of Castile", alive: false, age: 53, gender: "female", category: "royal", nationality: "Spanish", awards: false, attributes: ["Queen of Castile", "patron of Columbus", "white person"]},
+    { name: "Marie Antoinette", alive: false, age: 37, gender: "female", category: "royal", nationality: "Austrian-French", awards: false, attributes: ["Queen of France", "executed", "white person"]},
+    { name: "Julius Caesar", alive: false, age: 55, gender: "male", category: "political leader", nationality: "Roman", awards: false, attributes: ["Roman general", "dictator", "white person"]},
+    { name: "Gustavus Adolphus", alive: false, age: 37, gender: "male", category: "royal", nationality: "Swedish", awards: false, attributes: ["King of Sweden", "military commander", "white person"]},
+    { name: "Albert Einstein", alive: false, age: 76, gender: "male", category: "scientist", nationality: "German-American", awards: true, attributes: ["physicist", "Nobel laureate", "white person"]},
+    { name: "Stephen Hawking", alive: false, age: 76, gender: "male", category: "scientist", nationality: "British", awards: true, attributes: ["theoretical physicist", "author", "white person"]},
+    { name: "Nikola Tesla", alive: false, age: 86, gender: "male", category: "inventor", nationality: "Serbian-American", awards: true, attributes: ["electrical engineer", "futurist", "white person"]},
+    { name: "Marie Curie", alive: false, age: 66, gender: "female", category: "scientist", nationality: "Polish-French", awards: true, attributes: ["physicist", "chemist", "Nobel laureate", "white person"]},
+    { name: "Isaac Newton", alive: false, age: 84, gender: "male", category: "scientist", nationality: "English", awards: true, attributes: ["physicist", "mathematician", "white person"]},
+    { name: "Hedy Lamarr", alive: false, age: 85, gender: "female", category: "actor", nationality: "Austrian-American", awards: true, attributes: ["inventor", "film star", "white person"]},
+    { name: "William Shakespeare", alive: false, age: 52, gender: "male", category: "writer", nationality: "English", awards: false, attributes: ["playwright", "poet", "white person"]},
+    { name: "George Orwell", alive: false, age: 46, gender: "male", category: "writer", nationality: "British", awards: false, attributes: ["novelist", "essayist", "white person"]},
+    { name: "Mark Twain", alive: false, age: 74, gender: "male", category: "writer", nationality: "American", awards: false, attributes: ["humorist", "entrepreneur", "white person"]},
+    { name: "Edgar Allan Poe", alive: false, age: 40, gender: "male", category: "writer", nationality: "American", awards: false, attributes: ["poet", "short story writer", "white person"]},
+    { name: "Jane Austen", alive: false, age: 41, gender: "female", category: "writer", nationality: "English", awards: false, attributes: ["novelist", "social commentary", "white person"]},
+    { name: "Emily Brontë", alive: false, age: 30, gender: "female", category: "writer", nationality: "English", awards: false, attributes: ["novelist", "poet", "white person"]},
+    { name: "Mary Shelley", alive: false, age: 53, gender: "female", category: "writer", nationality: "English", awards: false, attributes: ["novelist", "Frankenstein author", "white person"]},
+    { name: "Agatha Christie", alive: false, age: 85, gender: "female", category: "writer", nationality: "English", awards: true, attributes: ["crime novelist", "playwright", "white person"]},
+    { name: "Emily Dickinson", alive: false, age: 55, gender: "female", category: "writer", nationality: "American", awards: false, attributes: ["poet", "reclusive", "white person"]},
+    { name: "Pablo Picasso", alive: false, age: 91, gender: "male", category: "artist", nationality: "Spanish", awards: true, attributes: ["painter", "sculptor", "white person"]},
+    { name: "Charles Darwin", alive: false, age: 73, gender: "male", category: "scientist", nationality: "English", awards: true, attributes: ["naturalist", "geologist", "white person"]},
+    { name: "Sigmund Freud", alive: false, age: 83, gender: "male", category: "psychologist", nationality: "Austrian", awards: true, attributes: ["founder of psychoanalysis", "neurologist", "white person"]},
+    { name: "Steve Jobs", alive: false, age: 56, gender: "male", category: "entrepreneur", nationality: "American", awards: true, attributes: ["Apple co-founder", "innovator", "white person"]},
+    { name: "Frida Kahlo", alive: false, age: 47, gender: "female", category: "artist", nationality: "Mexican", awards: true, attributes: ["painter", "feminist icon", "Latin American"]},
+    { name: "Leonardo da Vinci", alive: false, age: 67, gender: "male", category: "polymath", nationality: "Italian", awards: false, attributes: ["artist", "inventor", "white person"]}
+];
