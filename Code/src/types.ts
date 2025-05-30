@@ -28,7 +28,7 @@ export interface DMContext {
   spstRef: AnyActorRef;
  // lastResult: Hypothesis[] | null ;
   lastResult: string;
-//  nluValue: NLUObject | null ;
+  nluValue: NLUObject | null ;
   intent: any,
   confirmation?: Hypothesis[] | null;
   deny?: Hypothesis[] | null;
