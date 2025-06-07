@@ -64,16 +64,16 @@ interface information {
 }
 
 const famousPeople: {[index: string]: information} = {
-  taylor : {name: "taylor swift", information: "She is one of the most famous singers in the world. From 2023 to 2024 she was on a world tour, being one of the events that gathered a record number of people."},
-  harry : {name: "harry styles", information:"This incredible singer, former member of the British band One Direction, should stop walking around Italy and drop an album since the last one was in 2022."},
-  gaga: {name:"lady gaga" , information: "Lady Gaga is an American singer that recently dropped an album that reminds listeners of the early years in her career. She performed live in Brazil for nearly two million people, breaking a world record "},
-  justin: {name: "justin bieber", information: "He is a Canadian singer and song writer that gained fame when he was very young. He's first single 'Baby' is one of the most known songs worldwide."},
-  louis: {name: "louis tomlinson", information: "Just like Harry Styles, he is a former member of One Direction. He started to get more popularity back in 2022 when he dropped his second album 'Faith in the Future'. As for now, he will be performing at different festivals during the summer."},
-  orlando: {name: "orlando bloom", information: "A British actor that is popular for being one of the main characters in 'Pirates of the Caribbean', but also as the one who played Legolas in 'The Lord of the Rings'. He is married to Katy Perry."},
-  michael: {name: "michael jackson", information: "An African-American singer that was known as the king of Pop from the late 1990s to the early 2000s. One of his most known songs is 'Thriller', which is featured also in the 'Just Dance' Wii video game. He tragically passed away in 2009."},
-  nadia: {name: "nadia comaneci", information: "Romanian gymnast that currently lives in Canada. She was the first in the Olympics history to get a perfect 10 grade in gymnastics, in 1976, in Montreal."},
-  loreen: {name: "loreen", information: "Swedish singer that participated in Eurovision twice, the first time in 2012 and the second time in 2023. In both occasions she brought the contest to Sweden, being the first woman to achieve it."},
-  charli: {name: "charli xcx", information: "British singer that first got popular in the 2010s. Last year, 2024, she dropped an album called Brat, which caused a pop culture phenomenon called 'Brat Summer', that was all about being free spirited and partying a lot."},
+ "taylor swift": {name: "taylor swift", information: "She is one of the most famous singers in the world. From 2023 to 2024 she was on a world tour, being one of the events that gathered a record number of people."},
+  "harry styles" : {name: "harry styles", information:"This incredible singer, former member of the British band One Direction, should stop walking around Italy and drop an album since the last one was in 2022."},
+  "lady gaga": {name:"lady gaga" , information: "Lady Gaga is an American singer that recently dropped an album that reminds listeners of the early years in her career. She performed live in Brazil for nearly two million people, breaking a world record "},
+  "justin bieber": {name: "justin bieber", information: "He is a Canadian singer and song writer that gained fame when he was very young. He's first single 'Baby' is one of the most known songs worldwide."},
+  "louis tomlinson": {name: "louis tomlinson", information: "Just like Harry Styles, he is a former member of One Direction. He started to get more popularity back in 2022 when he dropped his second album 'Faith in the Future'. As for now, he will be performing at different festivals during the summer."},
+  "orlando bloom": {name: "orlando bloom", information: "A British actor that is popular for being one of the main characters in 'Pirates of the Caribbean', but also as the one who played Legolas in 'The Lord of the Rings'. He is married to Katy Perry."},
+  "michael jackson": {name: "michael jackson", information: "An African-American singer that was known as the king of Pop from the late 1990s to the early 2000s. One of his most known songs is 'Thriller', which is featured also in the 'Just Dance' Wii video game. He tragically passed away in 2009."},
+  "nadia comaneci": {name: "nadia comaneci", information: "Romanian gymnast that currently lives in Canada. She was the first in the Olympics history to get a perfect 10 grade in gymnastics, in 1976, in Montreal."},
+  "loreen": {name: "loreen", information: "Swedish singer that participated in Eurovision twice, the first time in 2012 and the second time in 2023. In both occasions she brought the contest to Sweden, being the first woman to achieve it."},
+  "charli xcx": {name: "charli xcx", information: "British singer that first got popular in the 2010s. Last year, 2024, she dropped an album called Brat, which caused a pop culture phenomenon called 'Brat Summer', that was all about being free spirited and partying a lot."},
 }
 // modify function. add if statements
 
@@ -353,7 +353,8 @@ const dmMachine = setup({
                   AskPerson: {
                     entry: {type: "spst.listen"},
                     on: {RECOGNISED: [{actions: ["extractEntities", assign({time:({event})=>getTime(event.nluValue)})]}],
-                      LISTEN_COMPLETE: "#ScheduleAppointment.getInformation",
+                      LISTEN_COMPLETE: "#ScheduleAppointment.confirmAppointment",
+                    //  LISTEN_COMPLETE: "#confirmAppointment.getInformation",
                       ASR_NOINPUT: {target: "NoInput"}
                     },
                   },
